@@ -92,7 +92,7 @@ public class ScouterFragment extends Fragment {
                             @Override
                             public void onSuccess(JSONObject id_response)
                             {
-                                    textView.append( name + "'s id is: " + ids.get(name) + " Here is their data: \n\n" +  id_response.toString() + "\n\n");//make ui changes
+                                    textView.append( name + "'s id is: " + ids.get(name) + " Here is their data: \n\n" +  id_response.toString() + "\n\n");//make ui changes -- here we could update a final List<ScoutProfile>
                                     count.integer = count.integer + 1;
                                     if(count.integer == name_list.size())
                                         progressBar.setVisibility(View.GONE);
