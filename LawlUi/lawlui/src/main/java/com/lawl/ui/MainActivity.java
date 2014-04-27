@@ -7,7 +7,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class MainActivity extends ActionBarActivity implements MainFragment.OnButtonPressListener, ChampFragment.OnChampClickListener {
+import java.util.List;
+
+public class MainActivity extends ActionBarActivity implements MainFragment.OnButtonPressListener, ChampFragment.OnChampClickListener, ScouterFragment.OnScoutActionListener {
 
 
 
@@ -89,6 +91,18 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         detailedChampFragment.setArguments(args);
 
         transaction.replace(R.id.fragment_container, detailedChampFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
+    public void onScoutAction(String names)
+    {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        ScoutProfileFragment fragment = new ScoutProfileFragment();
+        Bundle args = new Bundle();
+        args.putString("NAMES",names);
+        fragment.setArguments(args);
+        transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
