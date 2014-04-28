@@ -1,6 +1,11 @@
 package com.lawl.ui;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -84,7 +89,7 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
     public void onChampClicked(String champ_name){
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         DetailedChampFragment detailedChampFragment = new DetailedChampFragment();
-        System.out.println("Champion name = " + champ_name);
+        //System.out.println("Champion name = " + champ_name);
         // Pass the champion name to new fragment
         Bundle args = new Bundle();
         args.putString("CHAMP_NAME", champ_name);
@@ -106,4 +111,5 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
 }

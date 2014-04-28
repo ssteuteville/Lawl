@@ -4,19 +4,10 @@
     android:layout_height="match_parent"
     tools:context="com.lawl.ui.DetailedChampFragment">
 
-    <ImageView
-        android:id="@+id/champ_image"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:contentDescription="@string/grid_element_name"
-        android:src="@drawable/aatrox_splash_0" />
-
-    <TextView
-        android:id="@+id/champ_text"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:gravity="center"
-        android:text="@string/grid_element_name"/>
+    <android.support.v4.view.ViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </FrameLayout>
