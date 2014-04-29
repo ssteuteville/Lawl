@@ -48,7 +48,8 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFrag).commit();
         }
 
-        //Instantiating database/checking to see if it needs to be updated
+        // Instantiating database/checking to see if it needs to be updated
+        // Still need to implement update of database if more current data is available.
         dbHelper = new ChampDatabaseHelper(this);
         if (!dbHelper.checkDatabase()) {
             dbHelper.onCreate(db);

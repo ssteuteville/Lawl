@@ -2,6 +2,10 @@ package com.lawl.ui;
 
 /**
  * Created by Garreth on 4/27/2014.
+ * Was going to use this as part of a DOA (data access object) to help to manage the data for us.
+ * The DAO is responsible for handling the database connection and for accessing and modifying the data.
+ * It will also convert the database objects into real Java Objects,
+ * so that our user interface code does not have to deal with the persistence layer.
  */
 public class ChampDb {
     private long champion_id;
