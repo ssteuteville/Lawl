@@ -1,6 +1,7 @@
 package com.lawl.ui;
 
 import android.app.Activity;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 public class MainFragment extends Fragment {
 
     OnButtonPressListener mCallback;
+
 
     public MainFragment() {
         // Required empty public constructor
@@ -56,6 +58,9 @@ public class MainFragment extends Fragment {
                 mCallback.onButtonPressed(view.findViewById(R.id.jinx_button));
             }
         });
+
+
+
         // Inflate the layout for this fragment
         return v;
     }

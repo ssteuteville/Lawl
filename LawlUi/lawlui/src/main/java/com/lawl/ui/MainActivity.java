@@ -1,5 +1,6 @@
 package com.lawl.ui;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -8,15 +9,24 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.sql.SQLException;
 import java.util.List;
 
 public class MainActivity extends ActionBarActivity implements MainFragment.OnButtonPressListener, ChampFragment.OnChampClickListener, ScouterFragment.OnScoutActionListener {
 
-
+    ChampDatabaseHelper dbHelper;
+    SQLiteDatabase db;
+    RiotApiClient client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +46,33 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
 
             // Add mainFrag to 'fragment_container'
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFrag).commit();
+        }
+
+        //Instantiating database/checking to see if it needs to be updated
+        dbHelper = new ChampDatabaseHelper(this);
+        if (!dbHelper.checkDatabase()) {
+            dbHelper.onCreate(db);
+            String url = String.format("/api/lol/static-data/%s/v1.2/champion?locale=en_US&champData=info&", "na");
+
+            client.get(url,null,new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    try {
+                        JSONObject champs = response.getJSONObject("data");
+                        JSONArray names = champs.names();
+                        for(int i = 0; i < names.length(); i++) {
+                            String champ_name = names.get(i).toString();
+                            String id_s = champs.getJSONObject(champ_name).get("id").toString();
+                            int id = Integer.parseInt(id_s);
+                            //insert into database
+                            dbHelper.insertChamp(id, champ_name);
+                            Log.d("Champion Inserted: ", champ_name + " " + id);
+                        }
+                    } catch (Exception ex) {
+                        Log.d("Getting all champs error: ", ex.toString());
+                    }
+                }
+            });
         }
     }
 
