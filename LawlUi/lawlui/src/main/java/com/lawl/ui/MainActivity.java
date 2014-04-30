@@ -138,12 +138,12 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         transaction.commit();
     }
 
-    public void onScoutAction(String names)
+    public void onScoutAction(int[] id_list)
     {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         ScoutProfileFragment fragment = new ScoutProfileFragment();
         Bundle args = new Bundle();
-        args.putString("NAMES",names);
+        args.putIntArray("ids",id_list);
         fragment.setArguments(args);
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);

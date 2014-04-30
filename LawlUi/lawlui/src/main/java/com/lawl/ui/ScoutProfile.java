@@ -46,6 +46,16 @@ public class ScoutProfile implements Parcelable{
         return masteryInfo;
     }
 
+    public void setName(String name) { this.name = name; }
+
+    public void setMasteryInfo(String info) { this.masteryInfo = info; }
+
+    public void setRankedWins(int wins) { this.rankedWins = wins; }
+
+    public void setCurrentRank(String rank) { this.currentRank = rank; }
+
+    public void setPreviousRank(String rank) { this.previousRank = rank; }
+
     public ScoutProfile(Parcel in)
     {
         String[] strings = new String[4];

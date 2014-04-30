@@ -1,11 +1,18 @@
 package com.lawl.ui;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
@@ -16,16 +23,16 @@ import java.util.List;
  */
 public class ScoutProfileAdapter extends BaseAdapter {
     private Context context;
-    String[] names;
+    ScoutProfile[] profiles;
 
-    public ScoutProfileAdapter(Context context, String[] names)
+    public ScoutProfileAdapter(Context context, ScoutProfile[] profiles)
     {
-        this.names = names;
+        this.profiles = profiles;
         this.context = context;
     }
     @Override
     public int getCount() {
-        return this.names.length;
+        return this.profiles.length;
     }
 
     @Override
@@ -47,8 +54,18 @@ public class ScoutProfileAdapter extends BaseAdapter {
         else
             scoutProfileView = view;
 
-        TextView tv = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileTextView);
-        tv.setText(names[i]);
+        final TextView nameView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileName);
+        final TextView rankedWinsView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileWins);
+        final TextView previousRankView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfilePreviousRank);
+        final TextView currentRankView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileCurrentRank);
+        final TextView masteryInfoView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileMasteryInfo);
+        final TextView tv = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileTextView);
+        Log.e("SSSSS", profiles[0].getName() );
+        nameView.setText("Summoner name: " + profiles[i].getName());
+        rankedWinsView.setText("Ranked wins: " + Integer.toString(profiles[i].getRankedWins()));
+        previousRankView.setText("Season 3 rank: " + profiles[i].getPreviousRank());
+        currentRankView.setText("Current rank: " + profiles[i].getCurrentRank());
+        masteryInfoView.setText("Current Masteries: " + profiles[i].getMasteryInfo());
         return scoutProfileView;
     }
 }

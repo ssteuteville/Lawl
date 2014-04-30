@@ -87,52 +87,38 @@ public class ScouterFragment extends Fragment {
         }
     }
 
-    private void handleText(String names) {
+    private void handleText(final String names) {
         this.name_list.addAll(Arrays.asList(names.split("\\s*,\\s*")));
-        //String url = String.format("/api/lol/%s/v1.4/summoner/by-name/%s?", "na", names);
+        String url = String.format("/api/lol/%s/v1.4/summoner/by-name/%s?", "na", names);
         progressBar.setVisibility(View.VISIBLE);
-        mListener.onScoutAction(names);
-//        client.get(url, null, new JsonHttpResponseHandler() {
-//            @Override
-//            public void onSuccess(final JSONObject response)
-//            {
-//                try {
-//                    final HashMap<String, String> ids = new HashMap<String,String>();//just testing out how hashmaps work in java and providing an example of persisting an object into the handler below. aka making it final
-//                    final IntWrapper count = new IntWrapper(0);//since variables must be declared constant in order to be persisted into a handler we have to use an "IntWrapper"
-//                    for(final String name : name_list) //java foreach loop -> do stuff for every name in the list
-//                    {
-//                        String id = response.getJSONObject(name).get("id").toString(); //get the id associated with a name
-//                        ids.put(name, id); //add the id - name pair to hashmap
-//                        final String id_url = String.format("/api/lol/na/v1.3/stats/by-summoner/%s/summary?season=SEASON4&", id); //format url properly. note: all urls will either have ? or & at the end. API key is inserted by client.
-//                        Log.e("XXXXXXXXXXXXXXXXXX", id_url); //debug statement
-//                        client.get(id_url, null, new JsonHttpResponseHandler(){ //make a new request for each name in the list
-//                            @Override
-//                            public void onSuccess(JSONObject id_response)
-//                            {
-//                                    //textView.append( name + "'s id is: " + ids.get(name) + " Here is their data: \n\n" +  id_response.toString() + "\n\n");//make ui changes -- here we could update a final List<ScoutProfile>
-//                                    count.integer = count.integer + 1;
-//                                    if(count.integer == name_list.size())
-//                                    {
-//                                        progressBar.setVisibility(View.GONE);
-//                                        mListener.onScoutAction((String[]) name_list.toArray(new String[0]));
-//                                    }
-//                            }
-//                        });
-//                    }
-//                }
-//                catch(JSONException ex)
-//                {
-//                    textView.setText(name_list.toString());
-//                }
-//
-//            }
-//        });
+        client.get(url, null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(final JSONObject response)
+            {
+                try {
+                    final int[] ids = new int[name_list.size()];
+                    final IntWrapper count = new IntWrapper(0);//since variables must be declared constant in order to be persisted into a handler we have to use an "IntWrapper"
+                    for(int i = 0; i < name_list.size(); i++) //java foreach loop -> do stuff for every name in the list
+                    {
+                        ids[i]  = response.getJSONObject(name_list.get(i)).getInt("id");
+                        Log.e("XXXXXXXXXXXXXXXXXX", Integer.toString(ids[i]));
+                    }
+
+                    mListener.onScoutAction(ids);
+                }
+                catch(JSONException ex)
+                {
+                    textView.setText(name_list.toString());
+                }
+
+            }
+        });
 
 
 
     }
     public interface OnScoutActionListener {
-        public void onScoutAction(String names);
+        public void onScoutAction(int[] id_list);
     }
 
 
