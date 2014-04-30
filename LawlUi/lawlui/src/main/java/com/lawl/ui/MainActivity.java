@@ -33,6 +33,40 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Instantiating database/checking to see if it needs to be updated
+        // Still need to implement update of database if more current data is available.
+        dbHelper = new ChampDatabaseHelper(this);
+        client = new RiotApiClient("0b63c21d-b03a-4c25-b481-57d853f29a08");
+        Log.d("IF STATEMENT", "BEFORE");
+        if (!dbHelper.checkDatabase()) {
+            Log.d("IF STATEMENT", "DURING");
+            //dbHelper.onCreate(this);
+            String url = String.format("/api/lol/static-data/%s/v1.2/champion?locale=en_US&champData=info&", "na");
+
+            client.get(url, null, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    try {
+                        JSONObject champs = response.getJSONObject("data");
+                        JSONArray names = champs.names();
+                        for(int i = 0; i < names.length(); i++) {
+                            String champ_name = names.get(i).toString();
+                            String id_s = champs.getJSONObject(champ_name).get("id").toString();
+                            int id = Integer.parseInt(id_s);
+                            //insert into database
+                            boolean temp = dbHelper.insertChamp(id, champ_name);
+                            if (temp) {
+                                Log.d("Champion Inserted: ", champ_name + " " + id);
+                            }
+                            else Log.d("Champion not inserted", "balls");
+                        }
+                    } catch (Exception ex) {
+                        Log.d("Getting all champs error: ", ex.toString());
+                    }
+                }
+            });
+        }
+
         // Check that MainActivity is using fragment_container layout
         if (findViewById(R.id.fragment_container) != null) {
 
@@ -46,34 +80,6 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
 
             // Add mainFrag to 'fragment_container'
             getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, mainFrag).commit();
-        }
-
-        // Instantiating database/checking to see if it needs to be updated
-        // Still need to implement update of database if more current data is available.
-        dbHelper = new ChampDatabaseHelper(this);
-        if (!dbHelper.checkDatabase()) {
-            dbHelper.onCreate(db);
-            String url = String.format("/api/lol/static-data/%s/v1.2/champion?locale=en_US&champData=info&", "na");
-
-            client.get(url,null,new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(JSONObject response) {
-                    try {
-                        JSONObject champs = response.getJSONObject("data");
-                        JSONArray names = champs.names();
-                        for(int i = 0; i < names.length(); i++) {
-                            String champ_name = names.get(i).toString();
-                            String id_s = champs.getJSONObject(champ_name).get("id").toString();
-                            int id = Integer.parseInt(id_s);
-                            //insert into database
-                            dbHelper.insertChamp(id, champ_name);
-                            Log.d("Champion Inserted: ", champ_name + " " + id);
-                        }
-                    } catch (Exception ex) {
-                        Log.d("Getting all champs error: ", ex.toString());
-                    }
-                }
-            });
         }
     }
 
