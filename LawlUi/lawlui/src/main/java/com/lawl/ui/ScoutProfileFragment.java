@@ -2,6 +2,7 @@ package com.lawl.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +16,11 @@ import android.widget.TextView;
 
 
 import com.lawl.ui.dummy.DummyContent;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.Arrays;
@@ -37,7 +42,8 @@ public class ScoutProfileFragment extends Fragment /*implements AbsListView.OnIt
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String[] names; //this should really be ScoutProfile[]
+    private int[] ids; //this should really be ScoutProfile[]
+    private ScoutProfile[] profiles;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -70,53 +76,67 @@ public class ScoutProfileFragment extends Fragment /*implements AbsListView.OnIt
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        this.ids = getArguments().getIntArray("ids");
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_scoutprofile, container, false);
-        Bundle args = getArguments();
-        if(args == null)
-        {
-            Log.e("XxXxxXyyy", "Args was null");
-        }
-
-        this.names = args.getString("NAMES").split("\\s*,\\s*");
-
-        final ScoutProfile[] profiles = new ScoutProfile[names.length];
-        // Set the adapter
+        final View view = inflater.inflate(R.layout.fragment_scoutprofile, container, false);
+        RiotApiClient client = new RiotApiClient("0b63c21d-b03a-4c25-b481-57d853f29a08");
+        profiles = new ScoutProfile[3]; //index shouldn't be hard coded use ids.length
+        profiles[0] = new ScoutProfile("Wizard of Sawz", "Silver", "Silver", "n/a", 40);
+        profiles[1] = new ScoutProfile("Diamonz", "Silver", "Silver", "n/a", 76);
+        profiles[2] = new ScoutProfile("SAVAGENEDVED", "Silver", "Silver", "n/a", 20);
         mListView = (AbsListView) view.findViewById(android.R.id.list);
+        setAdapter(view);
 
-        //make api request
-        //parse response into this.profiles
-        //pass this.profiles to ScoutProfileAdapter instead of this.names
-
-        ((AdapterView<ListAdapter>) mListView).setAdapter(new ScoutProfileAdapter(view.getContext(), this.names));
-        // Set OnItemClickListener so we can be notified on item clicks
-//        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l){
+//        final IntWrapper count = new IntWrapper(0);
+//        for(int j = 0; j < ids.length; j++) {
+//            final int index = j;
+//            String url = String.format("/api/lol/na/v2.3/league/by-summoner/%d/entry?", ids[j]);
+//            client.get(url, null, new JsonHttpResponseHandler() {
+//                @Override
+//                public void onSuccess(JSONArray response) {
+//                    try {
+//                        for (int i = 0; i < response.length(); i++) {
+//                            JSONObject profile = response.getJSONObject(i);
+//                            if (profile.get("queueType") == "RANKED_SOLO_5x5") {
+//                                profiles[index] = new ScoutProfile(profile.getString("playerOrTeamName"));
+//                                i = response.length();
+//                            }
+//                        }
 //
-//            }
-//        });
-
-
+//                        count.integer = count.integer + 1;
+//                        if(count.integer == ids.length)
+//                        {
+//                            setAdapter(view);
+//                        }
+//
+//                    } catch (Exception ex) {
+//
+//                    }
+//
+//                }
+//            });
+//        }
         return view;
     }
 
-//    @Override
-//    public void onAttach(Activity activity) {
-//        super.onAttach(activity);
-//        try {
-//            mListener = (OnFragmentInteractionListener) activity;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString()
-//                + " must implement OnFragmentInteractionListener");
-//        }
-//    }
 
     @Override
     public void onDetach() {
         super.onDetach();
         //mListener = null;
+    }
+
+    public void setAdapter(View view)
+    {
+        mAdapter = new ScoutProfileAdapter(view.getContext(), profiles);
+        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
     }
 
 
