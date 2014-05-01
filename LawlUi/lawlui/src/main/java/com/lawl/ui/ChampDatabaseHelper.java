@@ -121,12 +121,13 @@ public class ChampDatabaseHelper extends SQLiteOpenHelper {
         try{
             SQLiteDatabase readDatabase = this.getReadableDatabase();
             //readDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + TEXT_TABLE + " (text VARCHAR);");
-            Cursor cur = readDatabase.rawQuery("SELECT champion_id FROM " + TABLE + " WHERE champion_name = "
-                    + name, null);
+            Log.d("GET_ID STATEMENT ", "SELECT champion_id FROM " + TABLE + " WHERE champion_name = " + "\"" + name + "\";");
+            Cursor cur = readDatabase.rawQuery("SELECT champion_id FROM " + TABLE + " WHERE champion_name = " + "\"" + name + "\";", null);
 
             if (cur != null) {
                 if(cur.moveToFirst()) {
                         temp_id = cur.getInt(cur.getColumnIndex("champion_id"));
+                        Log.d("ID RETURNED ", "" + temp_id);
                 }
             }
             readDatabase.close();
@@ -142,6 +143,7 @@ public class ChampDatabaseHelper extends SQLiteOpenHelper {
         String temp_name = "";
         try {
             SQLiteDatabase readDatabase = this.getReadableDatabase();
+            Log.d("GET_NAME STATEMENT ","SELECT champion_name FROM " + TABLE + " WHERE champion_id = " + id);
             Cursor cur = readDatabase.rawQuery("SELECT champion_name FROM " + TABLE
             + " WHERE champion_id = " + id, null);
 

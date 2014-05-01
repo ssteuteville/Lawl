@@ -2,6 +2,7 @@ package com.lawl.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +23,21 @@ public class SkillChampFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_skill_champ, container, false);
 
+        //String[] champ_data;
         String champ_name;
+        int champ_id;
 
         // Retrieve champion name from our main activity
         TextView champTextView = (TextView) v.findViewById(R.id.champ_text);
         Bundle args = getArguments();
         if (args != null) {
-            champ_name = args.getString("CHAMP_NAME");
-            champTextView.setText(champ_name);
+            String[] champ_data = args.getStringArray("CHAMP_DATA");
+            if (champ_data == null) {
+                Log.d("SHIT SHIT SHIT", " MORE SHIT");
+            }
+            champ_name = champ_data[0];
+            champ_id = Integer.parseInt(champ_data[1]);
+            champTextView.setText(champ_name + " " + champ_id);
         }
         else champ_name = "error";
 
