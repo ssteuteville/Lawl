@@ -23,6 +23,7 @@ public class DetailedChampFragment extends Fragment {
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
     private String champ_name;
+    private int champ_id;
 
 
     public DetailedChampFragment() {
@@ -39,12 +40,13 @@ public class DetailedChampFragment extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             champ_name = args.getString("CHAMP_NAME");
+            champ_id = args.getInt("CHAMP_ID");
         }
         else champ_name = "error";
 
         // Create a new ViewPager
         viewPager = (ViewPager) v.findViewById(R.id.pager);
-        pagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager(), champ_name);
+        pagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager(), champ_name, champ_id);
         viewPager.setAdapter(pagerAdapter);
 
         return v;
@@ -53,16 +55,19 @@ public class DetailedChampFragment extends Fragment {
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
 
         private String champ_name;
+        private int champ_id;
 
-        public ScreenSlidePagerAdapter(FragmentManager fm, String string) {
+        public ScreenSlidePagerAdapter(FragmentManager fm, String string, int id) {
             super(fm);
             champ_name = string;
+            champ_id = id;
         }
 
         @Override
         public Fragment getItem(int position) {
             Bundle args = new Bundle();
             args.putString("CHAMP_NAME", champ_name);
+            args.putInt("CHAMP_ID", champ_id);
             switch (position) {
                 case 0:
                     SkillChampFragment skillChampFragment = new SkillChampFragment();

@@ -31,12 +31,8 @@ public class SkillChampFragment extends Fragment {
         TextView champTextView = (TextView) v.findViewById(R.id.champ_text);
         Bundle args = getArguments();
         if (args != null) {
-            String[] champ_data = args.getStringArray("CHAMP_DATA");
-            if (champ_data == null) {
-                Log.d("SHIT SHIT SHIT", " MORE SHIT");
-            }
-            champ_name = champ_data[0];
-            champ_id = Integer.parseInt(champ_data[1]);
+            champ_name = args.getString("CHAMP_NAME");
+            champ_id = args.getInt("CHAMP_ID");
             champTextView.setText(champ_name + " " + champ_id);
         }
         else champ_name = "error";
