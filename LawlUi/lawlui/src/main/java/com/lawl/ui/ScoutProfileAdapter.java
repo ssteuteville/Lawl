@@ -60,7 +60,7 @@ public class ScoutProfileAdapter extends BaseAdapter {
         final TextView currentRankView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileCurrentRank);
         final TextView masteryInfoView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileMasteryInfo);
         final TextView tv = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileTextView);
-        Log.e("SSSSS", profiles[0].getName() );
+        Log.e("SSSSS", profiles[i].getName() );
         nameView.setText("Summoner name: " + profiles[i].getName());
         rankedWinsView.setText("Ranked wins: " + Integer.toString(profiles[i].getRankedWins()));
         previousRankView.setText("Season 3 rank: " + profiles[i].getPreviousRank());
@@ -68,4 +68,10 @@ public class ScoutProfileAdapter extends BaseAdapter {
         masteryInfoView.setText("Current Masteries: " + profiles[i].getMasteryInfo());
         return scoutProfileView;
     }
+
+   public void swapItems(ScoutProfile[] profiles)
+   {
+       this.profiles = profiles;
+       notifyDataSetChanged();
+   }
 }

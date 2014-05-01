@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 
 
 import com.lawl.ui.dummy.DummyContent;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
@@ -34,7 +36,7 @@ import java.util.Arrays;
  * Activities containing this fragment MUST implement the {@link }
  * interface.
  */
-public class ScoutProfileFragment extends Fragment /*implements AbsListView.OnItemClickListener*/ {
+public class ScoutProfileFragment extends ListFragment /*implements AbsListView.OnItemClickListener*/ {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -91,38 +93,42 @@ public class ScoutProfileFragment extends Fragment /*implements AbsListView.OnIt
         profiles[0] = new ScoutProfile("Wizard of Sawz", "Silver", "Silver", "n/a", 40);
         profiles[1] = new ScoutProfile("Diamonz", "Silver", "Silver", "n/a", 76);
         profiles[2] = new ScoutProfile("SAVAGENEDVED", "Silver", "Silver", "n/a", 20);
+        mAdapter = new ScoutProfileAdapter(view.getContext(), profiles);
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         setAdapter(view);
 
-//        final IntWrapper count = new IntWrapper(0);
-//        for(int j = 0; j < ids.length; j++) {
-//            final int index = j;
-//            String url = String.format("/api/lol/na/v2.3/league/by-summoner/%d/entry?", ids[j]);
-//            client.get(url, null, new JsonHttpResponseHandler() {
-//                @Override
-//                public void onSuccess(JSONArray response) {
-//                    try {
-//                        for (int i = 0; i < response.length(); i++) {
-//                            JSONObject profile = response.getJSONObject(i);
-//                            if (profile.get("queueType") == "RANKED_SOLO_5x5") {
-//                                profiles[index] = new ScoutProfile(profile.getString("playerOrTeamName"));
-//                                i = response.length();
-//                            }
-//                        }
-//
-//                        count.integer = count.integer + 1;
-//                        if(count.integer == ids.length)
-//                        {
-//                            setAdapter(view);
-//                        }
-//
-//                    } catch (Exception ex) {
-//
-//                    }
-//
-//                }
-//            });
-//        }
+        final IntWrapper count = new IntWrapper(0);
+        for(int j = 0; j < ids.length; j++) {
+            final int index = j;
+            String url = String.format("/api/lol/na/v2.3/league/by-summoner/%d/entry?", ids[j]);
+            client.get(url, null, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(String r) {
+                    try {
+                        JSONArray response = new JSONArray(r);
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject profile = response.getJSONObject(i);
+                            if (profile.get("queueType") == "RANKED_SOLO_5x5") {
+                                profiles[index] = new ScoutProfile(profile.getString("playerOrTeamName"), "Silver", "Silver", "n/a", 40);
+                                i = response.length();
+                            }
+                        }
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                               // mAdapter.swapItems(profiles);
+                                ((ScoutProfileAdapter)getListAdapter()).swapItems(profiles);
+                                mListView.invalidateViews();
+                            }
+                        });
+
+                    } catch (Exception ex) {
+
+                    }
+
+                }
+            });
+        }
         return view;
     }
 
@@ -135,7 +141,6 @@ public class ScoutProfileFragment extends Fragment /*implements AbsListView.OnIt
 
     public void setAdapter(View view)
     {
-        mAdapter = new ScoutProfileAdapter(view.getContext(), profiles);
         ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
     }
 
