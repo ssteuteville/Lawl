@@ -90,9 +90,9 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
         final View view = inflater.inflate(R.layout.fragment_scoutprofile, container, false);
         RiotApiClient client = new RiotApiClient("0b63c21d-b03a-4c25-b481-57d853f29a08");
         profiles = new ScoutProfile[3]; //index shouldn't be hard coded use ids.length
-        profiles[0] = new ScoutProfile("Wizard of Sawz", "Silver", "Silver", "n/a", 40);
-        profiles[1] = new ScoutProfile("Diamonz", "Silver", "Silver", "n/a", 76);
-        profiles[2] = new ScoutProfile("SAVAGENEDVED", "Silver", "Silver", "n/a", 20);
+        profiles[0] = new ScoutProfile("Wizard of Sawz", "Silver", "Silver", "21/9/0", 40);
+        profiles[1] = new ScoutProfile("Diamonz", "Silver", "Silver", "0/21/9", 76);
+        profiles[2] = new ScoutProfile("SAVAGENEDVED", "Silver", "Silver", "0/30/0", 20);
         mAdapter = new ScoutProfileAdapter(view.getContext(), profiles);
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         setAdapter(view);

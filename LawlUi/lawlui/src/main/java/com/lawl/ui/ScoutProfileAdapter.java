@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -56,16 +57,19 @@ public class ScoutProfileAdapter extends BaseAdapter {
 
         final TextView nameView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileName);
         final TextView rankedWinsView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileWins);
-        final TextView previousRankView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfilePreviousRank);
-        final TextView currentRankView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileCurrentRank);
+        final ImageView previousRankView = (ImageView) scoutProfileView.findViewById(R.id.ScoutProfilePreviousRankImage);
+        final ImageView currentRankView = (ImageView) scoutProfileView.findViewById(R.id.ScoutProfileCurrentRankImage);
         final TextView masteryInfoView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileMasteryInfo);
-        final TextView tv = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileTextView);
         Log.e("SSSSS", profiles[i].getName() );
-        nameView.setText("Summoner name: " + profiles[i].getName());
-        rankedWinsView.setText("Ranked wins: " + Integer.toString(profiles[i].getRankedWins()));
-        previousRankView.setText("Season 3 rank: " + profiles[i].getPreviousRank());
-        currentRankView.setText("Current rank: " + profiles[i].getCurrentRank());
-        masteryInfoView.setText("Current Masteries: " + profiles[i].getMasteryInfo());
+        nameView.setText(profiles[i].getName());
+        rankedWinsView.setText(Integer.toString(profiles[i].getRankedWins()));
+
+        if(profiles[i].getPreviousRank() == "Silver")
+            previousRankView.setImageResource(R.drawable.silver_badge);
+        if(profiles[i].getCurrentRank() == "Silver")
+            currentRankView.setImageResource(R.drawable.silver_badge);
+
+        masteryInfoView.setText(profiles[i].getMasteryInfo());
         return scoutProfileView;
     }
 
