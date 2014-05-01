@@ -25,7 +25,7 @@ import java.util.List;
 public class MainActivity extends ActionBarActivity implements MainFragment.OnButtonPressListener, ChampFragment.OnChampClickListener, ScouterFragment.OnScoutActionListener {
 
     ChampDatabaseHelper dbHelper;
-    SQLiteDatabase db;
+    //SQLiteDatabase db;
     RiotApiClient client;
 
     @Override
@@ -135,9 +135,18 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         DetailedChampFragment detailedChampFragment = new DetailedChampFragment();
         //System.out.println("Champion name = " + champ_name);
         // Pass the champion name to new fragment
+        int champ_id = dbHelper.getId(champ_name);
+        //String champ_id_string = "" + champ_id;
+        //String[] champ_data = new String[2];
+        //champ_data[0] = champ_name;
+        //champ_data[1] = champ_id_string;
+        //Log.d("Champion ID is this ", "" + champ_id);
         Bundle args = new Bundle();
-        args.putString("CHAMP_NAME", champ_name);
+        args.putString("CHAMP_NAME",champ_name);
+        args.putInt("CHAMP_ID", champ_id);
         detailedChampFragment.setArguments(args);
+
+        //Pass the champion name and ID to new fragment from table
 
         transaction.replace(R.id.fragment_container, detailedChampFragment);
         transaction.addToBackStack(null);
