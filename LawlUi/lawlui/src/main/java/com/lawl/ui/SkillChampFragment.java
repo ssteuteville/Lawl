@@ -9,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 public class SkillChampFragment extends Fragment {
 
 
@@ -26,6 +31,9 @@ public class SkillChampFragment extends Fragment {
         //String[] champ_data;
         String champ_name;
         int champ_id;
+        String url;
+        RiotApiClient client = new RiotApiClient("18a18101-dc93-45ff-8bb2-4180fabf6472");
+
 
         // Retrieve champion name from our main activity
         TextView champTextView = (TextView) v.findViewById(R.id.champ_text);
@@ -34,8 +42,32 @@ public class SkillChampFragment extends Fragment {
             champ_name = args.getString("CHAMP_NAME");
             champ_id = args.getInt("CHAMP_ID");
             champTextView.setText(champ_name + " " + champ_id);
+
+            url = String.format("/api/lol/static-data/%s/v1.2/champion/%d?champData=spells&", "na", champ_id);
+
+            client.get(url, null, new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(JSONObject response) {
+                    try {
+                        JSONArray spells = response.getJSONArray("spells");
+                        for(int i = 0; i < spells.length(); i++) {
+                            String spell_name = spells.getJSONObject(i).get("name").toString();
+                            String spell_desc = spells.getJSONObject(i).get("sanitizedDescription").toString();
+                            Log.d("SPELL NAME", spell_name);
+                            Log.d("SPELL DESCRIPTION", spell_desc);
+
+
+                        }
+                    } catch (Exception ex) {
+                        Log.d("Getting champ spells error", ex.toString());
+                    }
+                }
+            });
+
         }
         else champ_name = "error";
+
+
 
 
         // Set splash image based on retrieved name
