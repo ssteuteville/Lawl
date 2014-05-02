@@ -36,6 +36,7 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         // Instantiating database/checking to see if it needs to be updated
         // Still need to implement update of database if more current data is available.
         dbHelper = new ChampDatabaseHelper(this);
+        //dbHelper.dropTable();
         client = new RiotApiClient("0b63c21d-b03a-4c25-b481-57d853f29a08");
         Log.d("IF STATEMENT", "BEFORE");
         if (!dbHelper.checkDatabase()) {
@@ -135,12 +136,15 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         DetailedChampFragment detailedChampFragment = new DetailedChampFragment();
         //System.out.println("Champion name = " + champ_name);
         // Pass the champion name to new fragment
+
+        /*  Trying to account for invalid characters before calling getId function */
+        champ_name = champ_name.replace(".", "");
+        champ_name = champ_name.replace("\'", "");
+        champ_name = champ_name.replace(" ", "");
         int champ_id = dbHelper.getId(champ_name);
-        //String champ_id_string = "" + champ_id;
-        //String[] champ_data = new String[2];
-        //champ_data[0] = champ_name;
-        //champ_data[1] = champ_id_string;
-        //Log.d("Champion ID is this ", "" + champ_id);
+
+        //-----------------------------------------------------------------
+
         Bundle args = new Bundle();
         args.putString("CHAMP_NAME",champ_name);
         args.putInt("CHAMP_ID", champ_id);

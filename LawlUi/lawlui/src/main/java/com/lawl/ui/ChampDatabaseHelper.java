@@ -12,14 +12,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class ChampDatabaseHelper extends SQLiteOpenHelper {
-
+    private SQLiteDatabase mDb;
     public static final String TABLE = "champions";
     public static final String COLUMN_ID = "champion_id";
     public static final String COLUMN_NAME = "champion_name";
-    public static final String DB_FULL_PATH = "/data/data/com/databases/";
+    //public static final String DB_FULL_PATH = "/data/data/com/databases/";
 
     private static final String DATABASE_NAME = "champions.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     Context context;
 
     //Database Creation SQL statement
@@ -35,7 +35,8 @@ public class ChampDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        database.execSQL(DATABASE_CREATE);
+        mDb = database;
+        mDb.execSQL(DATABASE_CREATE);
     }
 
     @Override
@@ -139,6 +140,10 @@ public class ChampDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void dropTable()
+    {
+        mDb.execSQL("DROP TABLE IF EXISTS " + TABLE);
+    }
     public String getName(int id) {
         String temp_name = "";
         try {
