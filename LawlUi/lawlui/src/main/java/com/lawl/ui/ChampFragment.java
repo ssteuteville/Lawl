@@ -66,6 +66,7 @@ public class ChampFragment extends Fragment {
             "Katarina",
             "Kayle",
             "Kennen",
+            "Kha'zix",
             "Kog'Maw",
             "LeBlanc",
             "Lee Sin",

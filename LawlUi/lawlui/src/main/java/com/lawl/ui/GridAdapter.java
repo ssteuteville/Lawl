@@ -133,6 +133,8 @@ public class GridAdapter extends BaseAdapter {
             imageView.setImageResource(R.drawable.kayle_square_0);
         }	else if (name.equals("Kennen")) {
             imageView.setImageResource(R.drawable.kennen_square_0);
+        }	else if (name.equals("Kha'zix")) {
+            imageView.setImageResource(R.drawable.khazix_square_0);
         }	else if (name.equals("Kog'Maw")) {
             imageView.setImageResource(R.drawable.kogmaw_square_0);
         }	else if (name.equals("LeBlanc")) {
