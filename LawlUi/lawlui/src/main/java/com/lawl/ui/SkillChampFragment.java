@@ -1,5 +1,6 @@
 package com.lawl.ui;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -26,9 +27,8 @@ public class SkillChampFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_skill_champ, container, false);
+        final View v = inflater.inflate(R.layout.fragment_skill_champ, container, false);
 
-        //String[] champ_data;
         String champ_name;
         int champ_id;
         String url;
@@ -38,37 +38,70 @@ public class SkillChampFragment extends Fragment {
         // Retrieve champion name from our main activity
         TextView champTextView = (TextView) v.findViewById(R.id.champ_text);
         Bundle args = getArguments();
+
         if (args != null) {
             champ_name = args.getString("CHAMP_NAME");
             champ_id = args.getInt("CHAMP_ID");
             champTextView.setText(champ_name + " " + champ_id);
 
-            url = String.format("/api/lol/static-data/%s/v1.2/champion/%d?champData=spells&", "na", champ_id);
+            url = String.format("/api/lol/static-data/%s/v1.2/champion/%d?champData=passive,spells&", "na", champ_id);
 
             client.get(url, null, new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(JSONObject response) {
                     try {
                         JSONArray spells = response.getJSONArray("spells");
+
+                        String passive_name = response.getJSONObject("passive").get("name").toString();
+                        String passive_desc = response.getJSONObject("passive").get("sanitizedDescription").toString();
+
+                        String spell_names[] = new String[spells.length()];
+                        String spell_desc[] = new String[spells.length()];
+
                         for(int i = 0; i < spells.length(); i++) {
-                            String spell_name = spells.getJSONObject(i).get("name").toString();
-                            String spell_desc = spells.getJSONObject(i).get("sanitizedDescription").toString();
-                            Log.d("SPELL NAME", spell_name);
-                            Log.d("SPELL DESCRIPTION", spell_desc);
-
-
+                            spell_names[i] = spells.getJSONObject(i).get("name").toString();
+                            spell_desc[i] = spells.getJSONObject(i).get("sanitizedDescription").toString();
                         }
+
+                        TextView passiveName = (TextView) v.findViewById(R.id.skill_passive);
+                        passiveName.setText("Passive: " + passive_name);
+                        passiveName.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                        TextView passiveDesc = (TextView) v.findViewById(R.id.skill_passive_description);
+                        passiveDesc.setText(passive_desc);
+
+                        TextView skillOneName = (TextView) v.findViewById(R.id.skill1);
+                        skillOneName.setText("Q: " + spell_names[0]);
+                        skillOneName.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                        TextView skillOneDesc = (TextView) v.findViewById(R.id.skill1_description);
+                        skillOneDesc.setText(spell_desc[0]);
+
+                        TextView skillTwoName = (TextView) v.findViewById(R.id.skill2);
+                        skillTwoName.setText("W: " + spell_names[1]);
+                        skillTwoName.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                        TextView skillTwoDesc = (TextView) v.findViewById(R.id.skill2_description);
+                        skillTwoDesc.setText(spell_desc[1]);
+
+                        TextView skillThreeName = (TextView) v.findViewById(R.id.skill3);
+                        skillThreeName.setText("E: " + spell_names[2]);
+                        skillThreeName.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                        TextView skillThreeDesc = (TextView) v.findViewById(R.id.skill3_description);
+                        skillThreeDesc.setText(spell_desc[2]);
+
+                        TextView skillFourName = (TextView) v.findViewById(R.id.skill4);
+                        skillFourName.setText("R: " + spell_names[3]);
+                        skillFourName.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+                        TextView skillFourDesc = (TextView) v.findViewById(R.id.skill4_description);
+                        skillFourDesc.setText(spell_desc[3]);
+
                     } catch (Exception ex) {
                         Log.d("Getting champ spells error", ex.toString());
                     }
                 }
             });
 
+
         }
         else champ_name = "error";
-
-
-
 
         // Set splash image based on retrieved name
         ImageView champImageView = (ImageView) v.findViewById(R.id.champ_image);
@@ -97,13 +130,13 @@ public class SkillChampFragment extends Fragment {
             champImageView.setImageResource(R.drawable.caitlyn_splash_0);
         }	else if (champ_name.equals("Cassiopeia")) {
             champImageView.setImageResource(R.drawable.cassiopeia_splash_0);
-        }	else if (champ_name.equals("Cho'gath")) {
+        }	else if (champ_name.equals("Chogath")) {
             champImageView.setImageResource(R.drawable.chogath_splash_0);
         }	else if (champ_name.equals("Corki")) {
             champImageView.setImageResource(R.drawable.corki_splash_0);
         }	else if (champ_name.equals("Darius")) {
             champImageView.setImageResource(R.drawable.darius_splash_0);
-        }	else if (champ_name.equals("Dr. Mundo")) {
+        }	else if (champ_name.equals("DrMundo")) {
             champImageView.setImageResource(R.drawable.drmundo_splash_0);
         }	else if (champ_name.equals("Elise")) {
             champImageView.setImageResource(R.drawable.elise_splash_0);
@@ -111,7 +144,7 @@ public class SkillChampFragment extends Fragment {
             champImageView.setImageResource(R.drawable.evelynn_splash_0);
         }	else if (champ_name.equals("Ezreal")) {
             champImageView.setImageResource(R.drawable.ezreal_splash_0);
-        }	else if (champ_name.equals("Fiddlesticks")) {
+        }	else if (champ_name.equals("FiddleSticks")) {
             champImageView.setImageResource(R.drawable.fiddlesticks_splash_0);
         }	else if (champ_name.equals("Fiora")) {
             champImageView.setImageResource(R.drawable.fiora_splash_0);
@@ -135,7 +168,7 @@ public class SkillChampFragment extends Fragment {
             champImageView.setImageResource(R.drawable.irelia_splash_0);
         }	else if (champ_name.equals("Janna")) {
             champImageView.setImageResource(R.drawable.janna_splash_0);
-        }	else if (champ_name.equals("Jarvan IV")) {
+        }	else if (champ_name.equals("JarvanIV")) {
             champImageView.setImageResource(R.drawable.jarvaniv_splash_0);
         }	else if (champ_name.equals("Jax")) {
             champImageView.setImageResource(R.drawable.jax_splash_0);
@@ -155,11 +188,13 @@ public class SkillChampFragment extends Fragment {
             champImageView.setImageResource(R.drawable.kayle_splash_0);
         }	else if (champ_name.equals("Kennen")) {
             champImageView.setImageResource(R.drawable.kennen_splash_0);
-        }	else if (champ_name.equals("Kog'Maw")) {
+        }   else if (champ_name.equals("Khazix")) {
+            champImageView.setImageResource(R.drawable.khazix_splash_0);
+        }   else if (champ_name.equals("KogMaw")) {
             champImageView.setImageResource(R.drawable.kogmaw_splash_0);
-        }	else if (champ_name.equals("LeBlanc")) {
+        }	else if (champ_name.equals("Leblanc")) {
             champImageView.setImageResource(R.drawable.leblanc_splash_0);
-        }	else if (champ_name.equals("Lee Sin")) {
+        }	else if (champ_name.equals("LeeSin")) {
             champImageView.setImageResource(R.drawable.leesin_splash_0);
         }	else if (champ_name.equals("Leona")) {
             champImageView.setImageResource(R.drawable.leona_splash_0);
@@ -177,9 +212,9 @@ public class SkillChampFragment extends Fragment {
             champImageView.setImageResource(R.drawable.malzahar_splash_0);
         }	else if (champ_name.equals("Maokai")) {
             champImageView.setImageResource(R.drawable.maokai_splash_0);
-        }	else if (champ_name.equals("Master Yi")) {
+        }	else if (champ_name.equals("MasterYi")) {
             champImageView.setImageResource(R.drawable.masteryi_splash_0);
-        }	else if (champ_name.equals("Miss Fortune")) {
+        }	else if (champ_name.equals("MissFortune")) {
             champImageView.setImageResource(R.drawable.missfortune_splash_0);
         }	else if (champ_name.equals("Mordekaiser")) {
             champImageView.setImageResource(R.drawable.mordekaiser_splash_0);
@@ -255,7 +290,7 @@ public class SkillChampFragment extends Fragment {
             champImageView.setImageResource(R.drawable.trundle_splash_0);
         }	else if (champ_name.equals("Tryndamere")) {
             champImageView.setImageResource(R.drawable.tryndamere_splash_0);
-        }	else if (champ_name.equals("Twisted Fate")) {
+        }	else if (champ_name.equals("TwistedFate")) {
             champImageView.setImageResource(R.drawable.twistedfate_splash_0);
         }	else if (champ_name.equals("Twitch")) {
             champImageView.setImageResource(R.drawable.twitch_splash_0);
@@ -269,7 +304,7 @@ public class SkillChampFragment extends Fragment {
             champImageView.setImageResource(R.drawable.vayne_splash_0);
         }	else if (champ_name.equals("Veigar")) {
             champImageView.setImageResource(R.drawable.veigar_splash_0);
-        }	else if (champ_name.equals("Vel'koz")) {
+        }	else if (champ_name.equals("Velkoz")) {
             champImageView.setImageResource(R.drawable.velkoz_splash_0);
         }	else if (champ_name.equals("Vi")) {
             champImageView.setImageResource(R.drawable.vi_splash_0);
@@ -281,11 +316,11 @@ public class SkillChampFragment extends Fragment {
             champImageView.setImageResource(R.drawable.volibear_splash_0);
         }	else if (champ_name.equals("Warwick")) {
             champImageView.setImageResource(R.drawable.warwick_splash_0);
-        }	else if (champ_name.equals("Wukong")) {
+        }	else if (champ_name.equals("MonkeyKing")) {
             champImageView.setImageResource(R.drawable.wukong_splash_0);
         }	else if (champ_name.equals("Xerath")) {
             champImageView.setImageResource(R.drawable.xerath_splash_0);
-        }	else if (champ_name.equals("Xin Zhao")) {
+        }	else if (champ_name.equals("XinZhao")) {
             champImageView.setImageResource(R.drawable.xinzhao_splash_0);
         }	else if (champ_name.equals("Yasuo")) {
             champImageView.setImageResource(R.drawable.yasuo_splash_0);

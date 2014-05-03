@@ -39,7 +39,7 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         //dbHelper.dropTable();
         client = new RiotApiClient("0b63c21d-b03a-4c25-b481-57d853f29a08");
         Log.d("IF STATEMENT", "BEFORE");
-        if (!dbHelper.checkDatabase()) {
+        //if (!dbHelper.checkDatabase()) {  // Commented out this if statement so it would just create a new db every time
             Log.d("IF STATEMENT", "DURING");
             //dbHelper.onCreate(this);
             String url = String.format("/api/lol/static-data/%s/v1.2/champion?locale=en_US&champData=info&", "na");
@@ -66,7 +66,7 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
                     }
                 }
             });
-        }
+        //}
 
         // Check that MainActivity is using fragment_container layout
         if (findViewById(R.id.fragment_container) != null) {
@@ -141,6 +141,9 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         champ_name = champ_name.replace(".", "");
         champ_name = champ_name.replace("\'", "");
         champ_name = champ_name.replace(" ", "");
+        champ_name = champ_name.replace("Fiddlesticks", "FiddleSticks");
+        champ_name = champ_name.replace("LeBlanc", "Leblanc");
+        champ_name = champ_name.replace("Wukong", "MonkeyKing");
         int champ_id = dbHelper.getId(champ_name);
 
         //-----------------------------------------------------------------
