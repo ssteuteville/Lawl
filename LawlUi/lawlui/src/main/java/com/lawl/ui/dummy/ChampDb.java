@@ -1,4 +1,4 @@
-package com.lawl.ui;
+package com.lawl.ui.dummy;
 
 /**
  * Created by Garreth on 4/27/2014.
