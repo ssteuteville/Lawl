@@ -46,13 +46,13 @@ public class TipsChampFragment extends Fragment {
                 @Override
                 public void onSuccess(JSONObject response) {
                     try {
-                        JSONArray allytips = response.getJSONArray("allytips");
-                        JSONArray enemytips = response.getJSONArray("enemytips");
+                        JSONArray ally_tips = response.getJSONArray("allytips");
+                        JSONArray enemy_tips = response.getJSONArray("enemytips");
 
                         LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.tips_linear_layout);
 
-                        final TextView[] allyTipsTextViews = new TextView[allytips.length()];
-                        final TextView[] enemyTipsTextViews = new TextView[enemytips.length()];
+                        final TextView[] allyTipsTextViews = new TextView[ally_tips.length()];
+                        final TextView[] enemyTipsTextViews = new TextView[enemy_tips.length()];
 
                         final TextView allyTipsTitle = new TextView(getActivity());
                         allyTipsTitle.setText("Tips for playing as " + champ_name + ":");
@@ -65,9 +65,9 @@ public class TipsChampFragment extends Fragment {
                         final float scale = getResources().getDisplayMetrics().density;
                         int padding_in_px = (int) (padding_in_dp * scale + 0.5f);
 
-                        for(int i = 0; i < allytips.length(); i++){
+                        for(int i = 0; i < ally_tips.length(); i++){
                             final TextView allyTipView = new TextView(getActivity());
-                            allyTipView.setText("- " + allytips.getString(i));
+                            allyTipView.setText("- " + ally_tips.getString(i));
                             allyTipView.setPadding(0, 0, 0, padding_in_px);
                             linearLayout.addView(allyTipView);
                             allyTipsTextViews[i] = allyTipView;
@@ -79,9 +79,9 @@ public class TipsChampFragment extends Fragment {
                         enemyTipsTitle.setPadding(0, padding_in_px, 0, 0);
                         linearLayout.addView(enemyTipsTitle);
 
-                        for(int i = 0; i < enemytips.length(); i++){
+                        for(int i = 0; i < enemy_tips.length(); i++){
                             final TextView enemyTipView = new TextView(getActivity());
-                            enemyTipView.setText("- " + enemytips.getString(i));
+                            enemyTipView.setText("- " + enemy_tips.getString(i));
                             enemyTipView.setPadding(0, 0, 0, padding_in_px);
                             linearLayout.addView(enemyTipView);
                             enemyTipsTextViews[i] = enemyTipView;
