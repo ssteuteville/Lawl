@@ -17,9 +17,12 @@
     <string name="skill_description">Skill Description</string>
     <string name="tips_fragment">Tips and Tricks</string>
     <string name="lore_framgment">Lore</string>
-
-
-
+    <string name="name">Summoner Name</string>
+    <string name="ranked_wins">Ranked Wins</string>
+    <string name="normal_wins">Normal Wins</string>
+    <string name="ranked_losses">Ranked Losses</string>
+    <string name="normal_losses">Normal Losses</string>
+    <string name="profile_search_fragment">Welcome to the Profile Search Fragment</string>
 
 
 </resources>
