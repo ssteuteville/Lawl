@@ -92,14 +92,6 @@ public class ProfileSearchFragment extends Fragment {
             public void onSuccess(final JSONObject response)
             {
                 try {
-                    /*//final int[] ids = new int[name_list.size()];
-                    //final IntWrapper count = new IntWrapper(0);//since variables must be declared constant in order to be persisted into a handler we have to use an "IntWrapper"
-                    for(int i = 0; i < name_list.size(); i++) //java foreach loop -> do stuff for every name in the list
-                    {
-                        ids[i]  = response.getJSONObject(name_list.get(i)).getInt("id");
-                        Log.e("XXXXXXXXXXXXXXXXXX", Integer.toString(ids[i]));
-                    }*/
-
                     summoner_id = response.getJSONObject(name).getInt("id");
                     Log.d("ProfileSearchFragment ", "Success for " + name);
 
@@ -108,6 +100,7 @@ public class ProfileSearchFragment extends Fragment {
                 catch(JSONException ex)
                 {
                     textView.setText(summoner_name);
+                    Log.e("ProfileSearchFragment ", "Failure for " + name);
                 }
 
             }
