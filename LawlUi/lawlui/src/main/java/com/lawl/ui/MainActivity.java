@@ -172,4 +172,10 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         transaction.commit();
     }
 
+    public void onProfileAction() {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        ProfileFragment fragment = new ProfileFragment();
+
+    }
+
 }
