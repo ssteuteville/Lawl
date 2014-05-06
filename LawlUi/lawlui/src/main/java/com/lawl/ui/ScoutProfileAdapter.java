@@ -55,7 +55,15 @@ public class ScoutProfileAdapter extends BaseAdapter {
         else
             scoutProfileView = view;
 
+        if(profiles[i] == null)
+            return scoutProfileView;
+
         final TextView nameView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileName);
+        if(profiles[i].getName() == "DUMMY123456")
+        {
+            nameView.setText("Loading....");
+            return scoutProfileView;
+        }
         final TextView rankedWinsView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileWins);
         final ImageView previousRankView = (ImageView) scoutProfileView.findViewById(R.id.ScoutProfilePreviousRankImage);
         final ImageView currentRankView = (ImageView) scoutProfileView.findViewById(R.id.ScoutProfileCurrentRankImage);
@@ -64,10 +72,29 @@ public class ScoutProfileAdapter extends BaseAdapter {
         nameView.setText(profiles[i].getName());
         rankedWinsView.setText(Integer.toString(profiles[i].getRankedWins()));
 
-        if(profiles[i].getPreviousRank() == "Silver")
+        String temp = profiles[i].getPreviousRank();
+        if(temp == "BRONZE")
             previousRankView.setImageResource(R.drawable.silver_badge);
-        if(profiles[i].getCurrentRank() == "Silver")
+        else if ( temp == "SILVER" )
+            previousRankView.setImageResource(R.drawable.silver_badge);
+        else if ( temp == "GOLD" )
+            previousRankView.setImageResource(R.drawable.gold_badge);
+        else if ( temp == "PLATINUM" )
+            previousRankView.setImageResource(R.drawable.plat_badge);
+        else if ( temp == "DIAMOND" )
+            previousRankView.setImageResource(R.drawable.diamond_badge);
+
+        temp = profiles[i].getCurrentRank();
+        if(temp == "BRONZE")
+            currentRankView.setImageResource(R.drawable.bronze_badge);
+        else if(temp == "SILVER")
             currentRankView.setImageResource(R.drawable.silver_badge);
+        else if(temp == "GOLD")
+            currentRankView.setImageResource(R.drawable.gold_badge);
+        else if(temp == "PLATINUM")
+            currentRankView.setImageResource(R.drawable.plat_badge);
+        else if(temp == "DIAMOND")
+            currentRankView.setImageResource(R.drawable.diamond_badge);
 
         masteryInfoView.setText(profiles[i].getMasteryInfo());
         return scoutProfileView;

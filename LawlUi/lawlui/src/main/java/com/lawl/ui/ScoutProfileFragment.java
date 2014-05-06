@@ -102,10 +102,11 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
         new GetProfiles().execute(ids);
 
 //        RiotApiClient client = new RiotApiClient("0b63c21d-b03a-4c25-b481-57d853f29a08");
-        profiles = new ScoutProfile[3]; //index shouldn't be hard coded use ids.length
-        profiles[0] = new ScoutProfile("Wizard of Sawz", "Silver", "Silver", "21/9/0", 40);
-        profiles[1] = new ScoutProfile("Diamonz", "Silver", "Silver", "0/21/9", 76);
-        profiles[2] = new ScoutProfile("SAVAGENEDVED", "Silver", "Silver", "0/30/0", 20);
+        profiles = new ScoutProfile[ids.length];
+        for(int i = 0; i < ids.length; i++)
+        {
+            profiles[i] = new ScoutProfile("DUMMY123456", "", "", "", 0);
+        }
         mAdapter = new ScoutProfileAdapter(view.getContext(), profiles);
 
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -119,12 +120,6 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
         super.onDetach();
         //mListener = null;
     }
-
-    public void setAdapter(View view)
-    {
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
-    }
-
 
 //    @Override
 //    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -172,7 +167,7 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
         protected  String doInBackground(int[]... ids)
         {
             StringBuilder retBuilder = new StringBuilder();
-            retBuilder.append("{ \"responses\":[  ");
+            retBuilder.append("{ \"current_season\":[  ");
             for(int i = 0; i < ids[0].length; i++)
             {
                 String url = String.format("/api/lol/na/v2.3/league/by-summoner/%d/entry?", ids[0][i]);
@@ -218,34 +213,55 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
         @Override
         protected void onPostExecute(String result)
         {
-            ScoutProfile[] profiles = new ScoutProfile[ids.length];
+            ScoutProfile[] results = new ScoutProfile[ids.length];
+            CurrentSeason[] cur_season;
             try
             {
                 JSONObject json = new JSONObject(result);
-                JSONArray jsonArray = json.getJSONArray("responses");
-                for(int i = 0; i < jsonArray.length(); i++)
+                cur_season = ParseCurrentSeason(json.getJSONArray("current_season"));
+            }
+            catch (Exception e)
+            {
+                cur_season = new CurrentSeason[ids.length];
+                e.printStackTrace();
+            }
+            for(int i = 0; i < cur_season.length; i++)
+            {
+                results[i] = new ScoutProfile(cur_season[i], "", "");
+            }
+            profiles = results;
+            mAdapter.swapItems(profiles);
+        }
+
+        CurrentSeason[] ParseCurrentSeason(JSONArray input)
+        {
+            CurrentSeason[] results = new CurrentSeason[input.length()];
+            try{
+                for(int i = 0; i < input.length(); i++)
                 {
-                    JSONArray response = jsonArray.getJSONArray(i);
+                    JSONArray response = input.getJSONArray(i);
                     Log.d("GetProfiles", "Response " + i + ": " + response.toString());
                     for(int j = 0; j < response.length(); j++)
                     {
                         JSONObject match_type = response.getJSONObject(j);
                         Log.d("GetProfiles", "match_type " + j + ": " + match_type.toString());
-                        if(match_type.get("queueType") == "RANKED_SOLO_5x5")
+                        if(match_type.getString("queueType").equals("RANKED_SOLO_5x5"))
                         {
-                            profiles[i] = new ScoutProfile(match_type.getString("playerOrTeamName"), "Silver", "Silver", "n/a", 40);
-                            Log.d("GetProfiles", "profile" + i + ": " + profiles[i].getName());
+                            results[i] = new CurrentSeason(match_type.getString("playerOrTeamName"), match_type.getString("tier"), match_type.getInt("wins"));
+                            Log.d("GetProfiles", "profile" + i + ": " + results[i].name);
                             j = response.length();
                         }
                     }
-                    Log.d("GetProfiles", "Parse completed: " + profiles[i].getName());
+                    if(results[i] == null)
+                        results[i] = new CurrentSeason("Failed to load", "", 0);
+                    Log.d("GetProfiles", "Parse completed: " + results[i].name);
                 }
-
             }
-            catch (Exception e)
+            catch(Exception e)
             {
                 e.printStackTrace();
             }
+            return results;
         }
     }
 

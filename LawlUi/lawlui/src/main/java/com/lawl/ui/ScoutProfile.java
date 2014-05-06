@@ -21,6 +21,21 @@ public class ScoutProfile implements Parcelable{
         this.currentRank = currentRank;
         this.masteryInfo = masteryInfo;
     }
+
+    public ScoutProfile(CurrentSeason cur_season, String previousRank, String masteryInfo)
+    {
+        if(cur_season == null)
+            this.name="DUMMY123456";
+        else
+        {
+            this.name = cur_season.name;
+            this.previousRank = previousRank;
+            this.rankedWins = cur_season.wins;
+            this.currentRank = cur_season.cur_rank;
+            this.masteryInfo = masteryInfo;
+        }
+    }
+
     public String getName()
     {
         return name;
@@ -85,4 +100,17 @@ public class ScoutProfile implements Parcelable{
             return new ScoutProfile[size];
         }
     };
+}
+
+class CurrentSeason
+{
+    public String name;
+    public String cur_rank;
+    public int wins;
+    public CurrentSeason(String name, String cur_rank, int wins)
+    {
+        this.name = name;
+        this.cur_rank = cur_rank;
+        this.wins = wins;
+    }
 }
