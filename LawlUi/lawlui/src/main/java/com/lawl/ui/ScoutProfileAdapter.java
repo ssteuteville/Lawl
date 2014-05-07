@@ -59,7 +59,7 @@ public class ScoutProfileAdapter extends BaseAdapter {
             return scoutProfileView;
 
         final TextView nameView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileName);
-        if(profiles[i].getName() == "DUMMY123456")
+        if(profiles[i].getName().equals("DUMMY123456"))
         {
             nameView.setText("Loading....");
             return scoutProfileView;
