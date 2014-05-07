@@ -37,6 +37,7 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * A fragment representing a list of Items.
@@ -195,6 +196,11 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
                     }
                     else
                     {
+                        retBuilder.append("[ { \"playerOrTeamName\":\"Player Not Ranked\", \"queueType\":\"SOLO\", \"tier\":\"\", \"wins\":0 } ]");
+                        if(i != ids[0].length - 1)
+                        {
+                            retBuilder.append(",");
+                        }
                         Log.e("GetProfiles", "Failed request with id " + ids[0][i] + " Status code: " + status.getStatusCode() + "URL: " + BASE_URL + url + API_KEY );
                     }
 
@@ -235,25 +241,38 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
 
         CurrentSeason[] ParseCurrentSeason(JSONArray input)
         {
+            HashMap<String, Integer> Ranks = new HashMap<String, Integer>();
+                Ranks.put("", 0);
+                Ranks.put("BRONZE", 1);
+                Ranks.put("SILVER", 2);
+                Ranks.put("GOLD", 3);
+                Ranks.put("PLATINUM", 4);
+                Ranks.put("DIAMOND", 5);
+
             CurrentSeason[] results = new CurrentSeason[input.length()];
             try{
                 for(int i = 0; i < input.length(); i++)
                 {
-                    JSONArray response = input.getJSONArray(i);
+                    JSONArray response = input.getJSONArray(i);     //array of match types
+                    String curRank = "";     //keep track of highest rank as we check each match type
+                    String name = "";     //get the players name from a solo match type
+                    int wins = 0;     //sum of all wins
                     Log.d("GetProfiles", "Response " + i + ": " + response.toString());
+
                     for(int j = 0; j < response.length(); j++)
                     {
-                        JSONObject match_type = response.getJSONObject(j);
-                        Log.d("GetProfiles", "match_type " + j + ": " + match_type.toString());
-                        if(match_type.getString("queueType").equals("RANKED_SOLO_5x5"))
-                        {
-                            results[i] = new CurrentSeason(match_type.getString("playerOrTeamName"), match_type.getString("tier"), match_type.getInt("wins"));
-                            Log.d("GetProfiles", "profile" + i + ": " + results[i].name);
-                            j = response.length();
-                        }
+                        JSONObject match_type = response.getJSONObject(j);     //get a match type
+                        if(name.equals("") && match_type.getString("queueType").contains("SOLO") )     //if name isn't initialized and the match type is solo
+                            name = match_type.getString("playerOrTeamName");     //set name
+
+                        String tier = match_type.getString("tier");    //get the rank of current match type
+                        if(Ranks.get(tier) > Ranks.get(curRank))    //check if this match types rank is higher than the max rank so far
+                            curRank = tier;     //set curRank
+
+                        wins += match_type.getInt("wins");    //sum up wins for all match types
+
                     }
-                    if(results[i] == null)
-                        results[i] = new CurrentSeason("Failed to load", "", 0);
+                    results[i] = new CurrentSeason(name, curRank, wins);
                     Log.d("GetProfiles", "Parse completed: " + results[i].name);
                 }
             }

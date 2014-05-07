@@ -36,8 +36,7 @@
         <ImageView
             android:id="@+id/ScoutProfilePreviousRankImage"
             android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/silver_badge" />
+            android:layout_height="20dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -54,8 +53,7 @@
     <ImageView
         android:id="@+id/ScoutProfileCurrentRankImage"
         android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:src="@drawable/bronze_badge" />
+        android:layout_height="20dp" />
     </LinearLayout>
 
     <LinearLayout
