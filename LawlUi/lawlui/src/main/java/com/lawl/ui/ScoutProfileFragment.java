@@ -1,10 +1,7 @@
 package com.lawl.ui;
 
-import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,15 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-
-import com.google.gson.JsonArray;
-import com.lawl.ui.dummy.DummyContent;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -29,14 +20,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -167,14 +155,14 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
         @Override
         protected  String doInBackground(int[]... ids)
         {
+            HttpClient profileClient = new DefaultHttpClient();
             StringBuilder retBuilder = new StringBuilder();
             retBuilder.append("{ \"current_season\":[  ");
             for(int i = 0; i < ids[0].length; i++)
             {
-                String url = String.format("/api/lol/na/v2.3/league/by-summoner/%d/entry?", ids[0][i]);
-                HttpClient profileClient = new DefaultHttpClient();
+                String CURRENT_STATS_URL = String.format("/api/lol/na/v2.3/league/by-summoner/%d/entry?", ids[0][i]);
                 try{
-                    HttpGet request = new HttpGet(BASE_URL + url + API_KEY);
+                    HttpGet request = new HttpGet(BASE_URL + CURRENT_STATS_URL + API_KEY);
                     HttpResponse response = profileClient.execute(request);
                     StatusLine status = response.getStatusLine();
                     if(status.getStatusCode() == 200)
@@ -201,7 +189,7 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
                         {
                             retBuilder.append(",");
                         }
-                        Log.e("GetProfiles", "Failed request with id " + ids[0][i] + " Status code: " + status.getStatusCode() + "URL: " + BASE_URL + url + API_KEY );
+                        Log.e("GetProfiles", "Failed request with id " + ids[0][i] + " Status code: " + status.getStatusCode() + "URL: " + BASE_URL + CURRENT_STATS_URL + API_KEY );
                     }
 
 
@@ -209,6 +197,36 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
                 catch(Exception e)
                 {
                     e.printStackTrace();
+                }
+            }
+            retBuilder.append("], \"masteries\": [");
+
+            for(int i = 0; i < ids[0].length; i++)
+            {
+
+                String MASTERIES_URL = String.format("/api/lol/na/v1.4/summoner/%d/masteries?", ids[0][i]);
+                try {
+                    HttpGet request = new HttpGet(BASE_URL + MASTERIES_URL + API_KEY);
+                    HttpResponse response = profileClient.execute(request);
+                    StatusLine status = response.getStatusLine();
+                    if (status.getStatusCode() == 200) {
+                        HttpEntity entity = response.getEntity();
+                        InputStream content = entity.getContent();
+                        InputStreamReader streamReader = new InputStreamReader(content);
+                        BufferedReader reader = new BufferedReader(streamReader);
+                        String input;
+                        while ((input = reader.readLine()) != null) {
+                            retBuilder.append(input);
+                        }
+                        if (i != ids[0].length - 1) {
+                            retBuilder.append(",");
+                        }
+                        Log.d("GetProfiles", "Successful request with id " + ids[0][i]);
+                    }
+                }
+                catch (Exception ex)
+                {
+
                 }
             }
             retBuilder.append("]}");
@@ -221,19 +239,22 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
         {
             ScoutProfile[] results = new ScoutProfile[ids.length];
             CurrentSeason[] cur_season;
+            Masteries[] masteries;
             try
             {
                 JSONObject json = new JSONObject(result);
                 cur_season = ParseCurrentSeason(json.getJSONArray("current_season"));
+                masteries = ParseMasteries(json.getJSONArray("masteries"));
             }
             catch (Exception e)
             {
                 cur_season = new CurrentSeason[ids.length];
+                masteries = new Masteries[ids.length];
                 e.printStackTrace();
             }
             for(int i = 0; i < cur_season.length; i++)
             {
-                results[i] = new ScoutProfile(cur_season[i], "", "");
+                results[i] = new ScoutProfile(cur_season[i], masteries[i], "");
             }
             profiles = results;
             mAdapter.swapItems(profiles);
@@ -279,6 +300,44 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
             catch(Exception e)
             {
                 e.printStackTrace();
+            }
+            return results;
+        }
+
+        Masteries[] ParseMasteries(JSONArray input)
+        {
+            Masteries[] results = new Masteries[input.length()];
+            try
+            {
+                for(int i = 0; i < input.length(); i++)
+                {
+                    JSONObject response = input.getJSONObject(i);
+                    response = response.getJSONObject(response.names().getString(0));
+                    JSONArray pages = response.getJSONArray("pages");
+                    int mastery_pages[] = new int[3];
+                    for(int j = 0; j < pages.length(); j++)
+                    {
+                        JSONObject page = pages.getJSONObject(j);
+                        if(page.getBoolean("current"))
+                        {
+                            JSONArray masteries = page.getJSONArray("masteries");
+                            for(int k = 0; k < masteries.length(); k++)
+                            {
+                                JSONObject mastery = masteries.getJSONObject(k);
+                                String id = mastery.getString("id");
+                                int mastery_num = Character.getNumericValue(mastery.getString("id").charAt(1));
+                                mastery_pages[mastery_num - 1] += mastery.getInt("rank");
+                            }
+                            j = pages.length();
+                        }
+                    }
+                    results[i] = new Masteries(mastery_pages[0], mastery_pages[1], mastery_pages[2]);
+
+                }
+            }
+            catch(Exception ex)
+            {
+
             }
             return results;
         }

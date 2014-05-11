@@ -65,26 +65,13 @@ public class ScoutProfileAdapter extends BaseAdapter {
             return scoutProfileView;
         }
         final TextView rankedWinsView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileWins);
-        final ImageView previousRankView = (ImageView) scoutProfileView.findViewById(R.id.ScoutProfilePreviousRankImage);
         final ImageView currentRankView = (ImageView) scoutProfileView.findViewById(R.id.ScoutProfileCurrentRankImage);
         final TextView masteryInfoView = (TextView) scoutProfileView.findViewById(R.id.ScoutProfileMasteryInfo);
         Log.e("SSSSS", profiles[i].getName() );
         nameView.setText(profiles[i].getName());
         rankedWinsView.setText(Integer.toString(profiles[i].getRankedWins()));
 
-        String temp = profiles[i].getPreviousRank();
-        if(temp.equals("BRONZE"))
-            previousRankView.setImageResource(R.drawable.silver_badge);
-        else if ( temp.equals("SILVER") )
-            previousRankView.setImageResource(R.drawable.silver_badge);
-        else if ( temp.equals("GOLD" ))
-            previousRankView.setImageResource(R.drawable.gold_badge);
-        else if ( temp.equals("PLATINUM" ))
-            previousRankView.setImageResource(R.drawable.plat_badge);
-        else if ( temp.equals("DIAMOND" ))
-            previousRankView.setImageResource(R.drawable.diamond_badge);
-
-        temp = profiles[i].getCurrentRank();
+        String temp = profiles[i].getCurrentRank();
         if(temp.equals("BRONZE"))
             currentRankView.setImageResource(R.drawable.bronze_badge);
         else if(temp.equals("SILVER"))

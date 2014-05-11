@@ -102,7 +102,6 @@ public class ScouterFragment extends Fragment {
             {
                 try {
                     final int[] ids = new int[name_list.size()];
-                    final IntWrapper count = new IntWrapper(0);//since variables must be declared constant in order to be persisted into a handler we have to use an "IntWrapper"
                     for(int i = 0; i < name_list.size(); i++) //java foreach loop -> do stuff for every name in the list
                     {
                         ids[i]  = response.getJSONObject(name_list.get(i)).getInt("id");
@@ -129,10 +128,3 @@ public class ScouterFragment extends Fragment {
 
 }
 
-class IntWrapper {
-    public IntWrapper(int i)
-    {
-        this.integer = i;
-    }
-    public int integer;
-}
