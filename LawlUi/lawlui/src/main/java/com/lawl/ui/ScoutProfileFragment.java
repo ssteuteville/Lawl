@@ -27,15 +27,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-/**
- * A fragment representing a list of Items.
- * <p />
- * Large screen devices (such as tablets) are supported by replacing the ListView
- * with a GridView.
- * <p />
- * Activities containing this fragment MUST implement the {@link }
- * interface.
- */
 public class ScoutProfileFragment extends ListFragment /*implements AbsListView.OnItemClickListener*/ {
 
     // TODO: Rename parameter arguments, choose names that match
@@ -49,15 +40,8 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
 
     //private OnFragmentInteractionListener mListener;
 
-    /**
-     * The fragment's ListView/GridView.
-     */
     private AbsListView mListView;
 
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
     private ScoutProfileAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
@@ -90,7 +74,6 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
         View view = inflater.inflate(R.layout.fragment_scoutprofile_list, container, false);
         new GetProfiles().execute(ids);
 
-//        RiotApiClient client = new RiotApiClient("0b63c21d-b03a-4c25-b481-57d853f29a08");
         profiles = new ScoutProfile[ids.length];
         for(int i = 0; i < ids.length; i++)
         {
@@ -107,7 +90,6 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
     @Override
     public void onDetach() {
         super.onDetach();
-        //mListener = null;
     }
 
 //    @Override
@@ -119,11 +101,6 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
 //        }
 //    }
 
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
     public void setEmptyText(CharSequence emptyText) {
         View emptyView = mListView.getEmptyView();
 
@@ -324,7 +301,6 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
                             for(int k = 0; k < masteries.length(); k++)
                             {
                                 JSONObject mastery = masteries.getJSONObject(k);
-                                String id = mastery.getString("id");
                                 int mastery_num = Character.getNumericValue(mastery.getString("id").charAt(1));
                                 mastery_pages[mastery_num - 1] += mastery.getInt("rank");
                             }
@@ -337,7 +313,7 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
             }
             catch(Exception ex)
             {
-
+                ex.printStackTrace();
             }
             return results;
         }
