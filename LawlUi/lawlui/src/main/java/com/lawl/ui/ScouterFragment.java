@@ -6,12 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
+import android.util.Config;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -45,7 +47,6 @@ public class ScouterFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -69,6 +70,9 @@ public class ScouterFragment extends Fragment {
                     summoner_names = editText.getText().toString();
                     handleText(summoner_names);
                     handled = true;
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 }
                 return handled;
             }
@@ -88,6 +92,7 @@ public class ScouterFragment extends Fragment {
     }
 
     private void handleText(final String names) {
+        this.name_list.clear();
         this.name_list.addAll(Arrays.asList(names.split("\\s*,\\s*")));
         String url = String.format("/api/lol/%s/v1.4/summoner/by-name/%s?", "na", names);
         progressBar.setVisibility(View.VISIBLE);
@@ -97,7 +102,6 @@ public class ScouterFragment extends Fragment {
             {
                 try {
                     final int[] ids = new int[name_list.size()];
-                    final IntWrapper count = new IntWrapper(0);//since variables must be declared constant in order to be persisted into a handler we have to use an "IntWrapper"
                     for(int i = 0; i < name_list.size(); i++) //java foreach loop -> do stuff for every name in the list
                     {
                         ids[i]  = response.getJSONObject(name_list.get(i)).getInt("id");
@@ -124,10 +128,3 @@ public class ScouterFragment extends Fragment {
 
 }
 
-class IntWrapper {
-    public IntWrapper(int i)
-    {
-        this.integer = i;
-    }
-    public int integer;
-}

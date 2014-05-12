@@ -21,6 +21,45 @@ public class ScoutProfile implements Parcelable{
         this.currentRank = currentRank;
         this.masteryInfo = masteryInfo;
     }
+
+    public ScoutProfile(CurrentSeason cur_season, String previousRank, String masteryInfo)
+    {
+        if(cur_season == null)
+            this.name="DUMMY123456";
+        else
+        {
+            this.name = cur_season.name;
+            this.previousRank = previousRank;
+            this.rankedWins = cur_season.wins;
+            this.currentRank = cur_season.cur_rank;
+            this.masteryInfo = masteryInfo;
+        }
+    }
+
+    public ScoutProfile(CurrentSeason cur_season, Masteries masteries, String previousRank)
+    {
+        if(cur_season == null)
+        {
+            this.name="Failed to load current stats";
+            this.masteryInfo = masteries.toString();
+        }
+        else if(masteries == null)
+        {
+            this.name = cur_season.name;
+            this.rankedWins = cur_season.wins;
+            this.currentRank = cur_season.cur_rank;
+            this.masteryInfo = "Failed.";
+        }
+        else
+        {
+            this.name = cur_season.name;
+            this.previousRank = previousRank;
+            this.rankedWins = cur_season.wins;
+            this.currentRank = cur_season.cur_rank;
+            this.masteryInfo = masteries.toString();
+        }
+    }
+
     public String getName()
     {
         return name;
@@ -85,4 +124,34 @@ public class ScoutProfile implements Parcelable{
             return new ScoutProfile[size];
         }
     };
+}
+
+class CurrentSeason
+{
+    public String name;
+    public String cur_rank;
+    public int wins;
+    public CurrentSeason(String name, String cur_rank, int wins)
+    {
+        this.name = name;
+        this.cur_rank = cur_rank;
+        this.wins = wins;
+    }
+}
+
+class Masteries
+{
+    public int page1;
+    public int page2;
+    public int page3;
+    public Masteries(int page1, int page2, int page3)
+    {
+        this.page1 = page1;
+        this.page2 = page2;
+        this.page3 = page3;
+    }
+    public String toString()
+    {
+        return page1 + "/" + page2 + "/" + page3;
+    }
 }
