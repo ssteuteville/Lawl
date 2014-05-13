@@ -40,6 +40,7 @@ public class TipsChampFragment extends Fragment {
         if (args != null) {
             champ_name = args.getString("CHAMP_NAME");
             champ_id = args.getInt("CHAMP_ID");
+
             url = String.format("/api/lol/static-data/%s/v1.2/champion/%d?champData=allytips,enemytips&", "na", champ_id);
 
             client.get(url, null, new JsonHttpResponseHandler() {
