@@ -93,7 +93,7 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
     }
 
 //    @Override
-//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//    public void onItemClick(AdapterView<?> parent, View view, int position, long id) { #TODO
 //        if (null != mListener) {
 //            // Notify the active callbacks interface (the activity, if the
 //            // fragment is attached to one) that an item has been selected.
@@ -231,7 +231,7 @@ public class ScoutProfileFragment extends ListFragment /*implements AbsListView.
             }
             for(int i = 0; i < cur_season.length; i++)
             {
-                results[i] = new ScoutProfile(cur_season[i], masteries[i], "");
+                results[i] = new ScoutProfile(cur_season[i], masteries[i], "", ids[i]);
             }
             profiles = results;
             mAdapter.swapItems(profiles);
