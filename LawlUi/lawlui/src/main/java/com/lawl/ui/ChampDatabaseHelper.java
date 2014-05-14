@@ -11,6 +11,8 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.sql.SQLInput;
+
 public class ChampDatabaseHelper extends SQLiteOpenHelper {
     private SQLiteDatabase mDb;
     public static final String TABLE = "champions";
@@ -19,7 +21,7 @@ public class ChampDatabaseHelper extends SQLiteOpenHelper {
     //public static final String DB_FULL_PATH = "/data/data/com/databases/";
 
     private static final String DATABASE_NAME = "champions.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     Context context;
 
     //Database Creation SQL statement
@@ -46,6 +48,7 @@ public class ChampDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE);
         onCreate(db);
     }
+
 
     public boolean checkDatabase() {
         SQLiteDatabase db;

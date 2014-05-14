@@ -2,13 +2,24 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.Base.AppCompat">
-        <!-- Customize your theme here. -->'
+        <item name="vpiTitlePageIndicatorStyle">@style/CustomTitlePageIndicator</item>
     </style>
 
     <style name="GenericProgressIndicator" parent="@android:style/Widget.ProgressBar">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:indeterminate">true</item>
+    </style>
+
+    <style name="CustomTitlePageIndicator">
+        <item name="android:background">#AA000000</item>
+        <item name="footerColor">#FF33B5e5</item>
+        <item name="footerLineHeight">1dp</item>
+        <item name="footerIndicatorHeight">3dp</item>
+        <item name="footerIndicatorStyle">underline</item>
+        <item name="android:textColor">#AAFFFFFF</item>
+        <item name="selectedColor">#FFFFFFFF</item>
+        <item name="selectedBold">true</item>
     </style>
 
 </resources>
