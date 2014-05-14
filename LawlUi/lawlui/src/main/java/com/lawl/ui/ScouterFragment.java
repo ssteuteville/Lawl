@@ -135,21 +135,27 @@ public class ScouterFragment extends Fragment {
             @Override
             public void onSuccess(final JSONObject response)
             {
-                try {
-                    final int[] ids = new int[name_list.size()];
-                    for(int i = 0; i < name_list.size(); i++) //java foreach loop -> do stuff for every name in the list
+                ArrayList<Integer> ids = new ArrayList<Integer>();
+                for(int i = 0; i < name_list.size(); i++) //java foreach loop -> do stuff for every name in the list
+                {
+                    try
                     {
-                        ids[i]  = response.getJSONObject(name_list.get(i)).getInt("id");
-                        Log.e("XXXXXXXXXXXXXXXXXX", Integer.toString(ids[i]));
+                        ids.add(response.getJSONObject(name_list.get(i)).getInt("id"));
+                        Log.e("XXXXXXXXXXXXXXXXXX", Integer.toString(ids.get(i)));
+                    }
+                    catch (JSONException ex)
+                    {
+                        textView.setText(name_list.toString());
                     }
 
-                    mListener.onScoutAction(ids);
                 }
-                catch(JSONException ex)
+                int[] ret = new int[ids.size()];// I create this variable to avoid resizing an array everytime there is a failure
+                                                //I should really just go refactor my code to take ArrayList<Integer> instead of int[]. #TODO
+                for(int i = 0; i < ids.size(); i++)
                 {
-                    textView.setText(name_list.toString());
+                    ret[i] = ids.get(i);
                 }
-
+                mListener.onScoutAction(ret);
             }
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
