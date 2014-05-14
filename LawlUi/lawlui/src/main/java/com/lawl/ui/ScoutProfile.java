@@ -5,6 +5,9 @@ import android.os.Parcelable;
 
 /**
  * Created by Shane Steuteville on 4/26/2014.
+ * These classes will be used in ScoutProfile funcitonality and PlayerProfile functionality.
+ * ScoutProfile class represents a full scout profile.
+ * Masteries and current season classes are both associated with the api calls needed to create a ScoutProfile.
  */
 public class ScoutProfile implements Parcelable{
     private String name;
@@ -12,6 +15,7 @@ public class ScoutProfile implements Parcelable{
     private String previousRank;
     private String currentRank;
     private String masteryInfo;
+    private int id;
 
     public ScoutProfile(String name, String previousRank, String currentRank, String masteryInfo, int rankedWins )
     {
@@ -36,7 +40,7 @@ public class ScoutProfile implements Parcelable{
         }
     }
 
-    public ScoutProfile(CurrentSeason cur_season, Masteries masteries, String previousRank)
+    public ScoutProfile(CurrentSeason cur_season, Masteries masteries, String previousRank, int id)
     {
         if(cur_season == null)
         {
@@ -45,6 +49,7 @@ public class ScoutProfile implements Parcelable{
         }
         else if(masteries == null)
         {
+            this.id = id;
             this.name = cur_season.name;
             this.rankedWins = cur_season.wins;
             this.currentRank = cur_season.cur_rank;
@@ -52,6 +57,7 @@ public class ScoutProfile implements Parcelable{
         }
         else
         {
+            this.id = id;
             this.name = cur_season.name;
             this.previousRank = previousRank;
             this.rankedWins = cur_season.wins;
@@ -60,6 +66,7 @@ public class ScoutProfile implements Parcelable{
         }
     }
 
+    public int getId() {return this.id; }
     public String getName()
     {
         return name;

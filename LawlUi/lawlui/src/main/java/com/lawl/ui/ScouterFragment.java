@@ -61,14 +61,17 @@ public class ScouterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_scouter, container, false);
+
+        //initialize ui elements + member variables
         layout = (LinearLayout) view.findViewById(R.id.scouter_layout);
         progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
         editTexts = new ArrayList<EditText>();
         submit = (Button)view.findViewById(R.id.ScouterSubmit);
         textView = (TextView) view.findViewById(R.id.scouter_text);
-
+        ImageButton addFieldButton = (ImageButton)view.findViewById(R.id.add_field_button);
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(view.getContext());
         dialogBuilder.setTitle("Failed to retrieve information.");
         dialogBuilder.setMessage("One or more of the summoner names provided was invalid.")
@@ -79,15 +82,15 @@ public class ScouterFragment extends Fragment {
                     }
                 });
         alertDialog = dialogBuilder.create();
+        client = new RiotApiClient("0b63c21d-b03a-4c25-b481-57d853f29a08");
 
+        //setup listeners
         submit.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 handleText();
             }
         });
-
-        ImageButton addFieldButton = (ImageButton)view.findViewById(R.id.add_field_button);
         addFieldButton.setOnClickListener( new ImageButton.OnClickListener(){
             @Override
             public void onClick(View v)
@@ -99,8 +102,6 @@ public class ScouterFragment extends Fragment {
                 layout.addView(eText);
             }
         });
-
-        client = new RiotApiClient("0b63c21d-b03a-4c25-b481-57d853f29a08");
         return view;
     }
 
@@ -118,25 +119,25 @@ public class ScouterFragment extends Fragment {
     private void handleText() {
         this.name_list.clear();
         String names = "";
-        for(EditText eText : editTexts)
+        for(EditText eText : editTexts)//get the value from each editText
         {
             String curName = eText.getText().toString();
             if(curName != null && !curName.isEmpty())
             {
                 curName = curName.toLowerCase();
                 curName = curName.replace(" ", "");//these two lines are making the names adhere to riot's scheme
-                this.name_list.add(curName);
-                names += eText.getText().toString() + ",";
+                this.name_list.add(curName);//keep track of each name for indexing into JSONObject
+                names += eText.getText().toString() + ",";//creating a csv string
             }
         }
         String url = String.format("/api/lol/%s/v1.4/summoner/by-name/%s?", "na", names);
         progressBar.setVisibility(View.VISIBLE);
-        client.get(url, null, new JsonHttpResponseHandler() {
+        client.get(url, null, new JsonHttpResponseHandler() { //making the api call
             @Override
-            public void onSuccess(final JSONObject response)
+            public void onSuccess(final JSONObject response)//if it was successful create a list of ids to pass to next fragment
             {
                 ArrayList<Integer> ids = new ArrayList<Integer>();
-                for(int i = 0; i < name_list.size(); i++) //java foreach loop -> do stuff for every name in the list
+                for(int i = 0; i < name_list.size(); i++)
                 {
                     try
                     {
@@ -145,7 +146,7 @@ public class ScouterFragment extends Fragment {
                     }
                     catch (JSONException ex)
                     {
-                        textView.setText(name_list.toString());
+                        textView.setText(name_list.toString()); //for debugging
                     }
 
                 }
@@ -155,10 +156,10 @@ public class ScouterFragment extends Fragment {
                 {
                     ret[i] = ids.get(i);
                 }
-                mListener.onScoutAction(ret);
+                mListener.onScoutAction(ret); //new fragment
             }
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)//if request fails handle gracefully
             {
                 progressBar.setVisibility(View.GONE);
                 alertDialog.show();
