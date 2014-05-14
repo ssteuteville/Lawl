@@ -42,7 +42,7 @@ public class SkillChampFragment extends Fragment {
         if (args != null) {
             champ_name = args.getString("CHAMP_NAME");
             champ_id = args.getInt("CHAMP_ID");
-            champTextView.setText(champ_name + " " + champ_id);
+            champTextView.setText(champ_name);
 
             url = String.format("/api/lol/static-data/%s/v1.2/champion/%d?champData=passive,spells&", "na", champ_id);
 
