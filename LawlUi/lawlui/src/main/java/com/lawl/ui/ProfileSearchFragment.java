@@ -2,6 +2,7 @@ package com.lawl.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -65,6 +67,9 @@ public class ProfileSearchFragment extends Fragment {
                     summoner_name = editText.getText().toString();
                     handleText(summoner_name);
                     handled = true;
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                            Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);
                 }
                 return handled;
             }
@@ -101,6 +106,9 @@ public class ProfileSearchFragment extends Fragment {
                 {
                     textView.setText(summoner_name);
                     Log.e("ProfileSearchFragment ", "Failure for " + name);
+
+                    //textView.setText(name_list.toString());
+
                 }
 
             }

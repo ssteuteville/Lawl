@@ -18,11 +18,19 @@ import android.view.ViewGroup;
 public class ProfileFragment extends Fragment {
 
     RiotApiClient client = new RiotApiClient("0b63c21d-b03a-4c25-b481-57d853f29a08");
+    int id;
+    //OnProfileActionListener mListener;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
 
+    @Override
+    public void onCreate (Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        this.id = getArguments().getInt("id");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,17 +40,17 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    @Override
+    /*@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
             //
-            // /mListener = (OnProfileActionListener) activity;
+            mListener = (OnProfileActionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
+    }*/
 
     @Override
     public void onDetach() {
