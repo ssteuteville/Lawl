@@ -22,7 +22,7 @@ import org.json.JSONObject;
 import java.sql.SQLException;
 import java.util.List;
 
-public class MainActivity extends ActionBarActivity implements MainFragment.OnButtonPressListener, ChampFragment.OnChampClickListener, ScouterFragment.OnScoutActionListener {
+public class MainActivity extends ActionBarActivity implements MainFragment.OnButtonPressListener, ChampFragment.OnChampClickListener, ScouterFragment.OnScoutActionListener, ProfileSearchFragment.OnProfileSearchActionListener {
 
     ChampDatabaseHelper dbHelper;
     //SQLiteDatabase db;
@@ -116,8 +116,8 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
 
         } else if (view.getId() == R.id.velkoz_button) {
 
-            ProfileFragment profileFragment = new ProfileFragment();
-            transaction.replace(R.id.fragment_container, profileFragment);
+            ProfileSearchFragment profileSearchFragment = new ProfileSearchFragment();
+            transaction.replace(R.id.fragment_container, profileSearchFragment);
 
         } else if (view.getId() == R.id.jinx_button) {
 
@@ -172,9 +172,15 @@ public class MainActivity extends ActionBarActivity implements MainFragment.OnBu
         transaction.commit();
     }
 
-    public void onProfileAction() {
+    public void onProfileSearchAction(int summoner_id) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putInt("id", summoner_id);
+        fragment.setArguments(args);
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
     }
 

@@ -1,7 +1,7 @@
 package com.lawl.ui;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -84,7 +84,7 @@ public class ProfileSearchFragment extends Fragment {
             mListener = (OnProfileSearchActionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnProfileSearchActionListener");
         }
     }
 
@@ -98,6 +98,7 @@ public class ProfileSearchFragment extends Fragment {
             {
                 try {
                     summoner_id = response.getJSONObject(name).getInt("id");
+                    //textView.setText(summoner_name);
                     Log.d("ProfileSearchFragment ", "Success for " + name);
 
                     mListener.onProfileSearchAction(summoner_id);

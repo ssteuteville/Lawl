@@ -23,6 +23,8 @@
     <string name="ranked_losses">Ranked Losses</string>
     <string name="normal_losses">Normal Losses</string>
     <string name="profile_search_fragment">Welcome to the Profile Search Fragment</string>
+    <string name="masteries">Masteries</string>
+    <string name="current_rank">Current Rank</string>
 
 
 </resources>

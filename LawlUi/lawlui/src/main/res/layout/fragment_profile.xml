@@ -26,6 +26,18 @@
                 android:text="@string/name" />
 
             <TextView
+                android:id="@+id/masteries"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/masteries"/>
+
+            <TextView
+                android:id="@+id/current_rank"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/current_rank"/>
+
+            <TextView
                 android:id="@+id/ranked_wins"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
